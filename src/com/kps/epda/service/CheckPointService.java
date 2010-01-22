@@ -113,7 +113,7 @@ public class CheckPointService {
 
     public List getBeberList(Map map) throws Exception{
         List list = checkPointDao.getBeberList(map);
-        System.out.println("dpp");
+        System.out.println("  123 한글 테스트 dd");             
         return list;
     }
 
