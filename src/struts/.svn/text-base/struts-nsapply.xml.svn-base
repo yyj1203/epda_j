@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    
+<struts>
+
+    <package name="nsapply" namespace="/nsapply" extends="struts-default">    	
+    	<!-- 자격부여 목록을 얻어옵니다 -->
+    	<action name="listNsapply" method="listNsapply" class="com.kps.kcm.action.NsapplyAction">
+    		<result name="success" type="dispatcher">/nsapply/ListNsapply.jsp</result>
+    	</action>
+    	<!-- 자격부여 발송(관리부서) 목록을 얻어옵니다 -->
+    	<action name="listNsapplyCg" method="listNsapplyCg" class="com.kps.kcm.action.NsapplyAction">
+    		<result name="success" type="dispatcher">/nsapply/ListNsapplyCg.jsp</result>
+    	</action>
+    	<!-- 자격부여 관리(주관부서) 목록을 얻어옵니다 -->
+    	<action name="listNsapplyMg" method="listNsapplyMg" class="com.kps.kcm.action.NsapplyAction">
+    		<result name="success" type="dispatcher">/nsapply/ListNsapplyMg.jsp</result>
+    	</action>
+    	<!-- 자격부여 확인(품질부서) 목록을 얻어옵니다 -->
+    	<action name="listNsapplyPum" method="listNsapplyPum" class="com.kps.kcm.action.NsapplyAction">
+    		<result name="success" type="dispatcher">/nsapply/ListNsapplyPum.jsp</result>
+    	</action>
+    	
+    	<!-- 자격부여 신규입력 화면을 조회한다 -->
+    	<action name="requestNsoApplySignForm" method="requestNsoApplySignForm" class="com.kps.kcm.action.NsapplyAction">
+    		<result name="success" type="dispatcher">/nsapply/frmSignApply.jsp</result>
+    	</action>
+    	
+    </package>
+    
+</struts> 

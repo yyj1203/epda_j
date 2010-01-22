@@ -1,0 +1,15 @@
+
+**** Error file opened at 20091020 110807 Korea Standard Time Rel 3.0.2 (2009-03-29) [711.34]
+Error:  >Tue Oct 20 11:08:07,093<    >RfcGetException rc (7) message: No more storage space available for extending an internal table.
+<RfcGetException
+
+
+**** Error file opened at 20091020 111512 Korea Standard Time Rel 3.0.2 (2009-03-29) [711.34]
+Error:  >Tue Oct 20 11:15:12,703<    >RfcGetException rc (7) message: No more storage space available for extending an internal table.
+<RfcGetException
+
+
+**** Error file opened at 20091020 112113 Korea Standard Time Rel 3.0.2 (2009-03-29) [711.34]
+Error:  >Tue Oct 20 11:21:13,671<    >RfcGetException rc (7) message: No more storage space available for extending an internal table.
+<RfcGetException
+

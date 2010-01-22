@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    
+<struts>
+    <package name="construction" namespace="/construction" extends="struts-default">
+    	<!-- 공사코드을 조회한다. 페이징처리없음 -->
+    	<action name="listConstruction" method="listConstruction" class="com.kps.bid.action.ConstructionAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 공사코드을 조회한다. 페이징처리 -->
+    	<action name="listConstructionPaging" method="listConstructionPaging" class="com.kps.bid.action.ConstructionAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 공사코드에 글을 등록한다. -->
+    	<action name="insertConstruction" method="insertConstruction" class="com.kps.bid.action.ConstructionAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 공사코드을 수정한다. -->
+    	<action name="updateConstruction" method="updateConstruction" class="com.kps.bid.action.ConstructionAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 공사코드을 삭제한다. -->
+    	<action name="deleteConstruction" method="deleteConstruction" class="com.kps.bid.action.ConstructionAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 공사코드을 읽는다. -->
+    	<action name="readConstruction" method="readConstruction" class="com.kps.bid.action.ConstructionAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    </package>
+</struts> 

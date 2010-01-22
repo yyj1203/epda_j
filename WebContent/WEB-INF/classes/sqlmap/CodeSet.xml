@@ -1,0 +1,54 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="codeSet">	
+	
+	<typeAlias alias="CodeMap" type="com.kps.common.dto.CodeMap"/>
+
+	<select id="selectAllCodeSet" resultClass="java.util.HashMap">
+		SELECT 
+			CODE_SET_ID,
+			CODE_SET_NAME
+		FROM EPM.TB_CODESET
+		ORDER BY CODE_SET_ID
+	</select>
+	
+	<select id="selectCodeByCodeSetID" resultClass="java.util.HashMap">
+		SELECT
+			CODE_SET_ID,
+			CODE_ID,
+			CODE_NM,
+			CODE_ENGLISH_NM,
+			CODE_VALUE,
+			REMARK,
+			USE_IND,
+			SORT_ORDER
+		FROM EPM.TB_CODE
+		WHERE CODE_SET_ID=#CODE_SET_ID#
+		AND USE_IND='Y'
+		ORDER BY SORT_ORDER
+	</select>	
+	
+	<select id="getCodeListByReserved1" resultClass="java.util.HashMap">
+		SELECT			
+			CODE_VALUE data,
+			CODE_NM label
+		FROM EPM.TB_CODE
+		WHERE CODE_SET_ID=#CODE_SET_ID#
+		AND RESERVED1 LIKE '%' || #RESERVED1# || '%'
+	</select>		
+	
+	
+	<select id="getEvibCode" resultClass="CodeMap">
+		SELECT 
+			CCOD_DES label, 
+			CC_1.CCOD_CD2 data
+	    FROM EVIB.TB_CCOD cc_1
+	    WHERE 1=1
+	    AND CCOD_CD1        = #CCOD_CD1#
+	    AND CCOD_CD3        = '00'
+	    AND cc_1.CCOD_STS   = 'Y'
+	    ORDER BY CCOD_CD4
+	</select>		
+	
+</sqlMap>
+

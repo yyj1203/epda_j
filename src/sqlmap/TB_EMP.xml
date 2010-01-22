@@ -1,0 +1,57 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="emp">
+	
+	<select id="getEmpById" resultClass="java.util.HashMap">
+		SELECT 
+			EMP_NO, 
+			EMP_NAME,
+			PLANT1,
+			PLANT2,
+			SEC2		
+		FROM EPM.TB_EMP
+		WHERE EMP_NO = #EMP_NO#		
+	</select>
+	
+	<select id="getEmpList" resultClass="java.util.HashMap">
+		SELECT 
+			EMP_NO, 
+			EMP_NAME,
+			PLANT1,
+			PLANT2,
+			SEC2		
+		FROM EPM.TB_EMP
+		Where plant1 = '2110'
+		AND sec2 is not null
+	</select>
+		
+	<sql id="where_getEmpList">
+		WHERE PLANT1 = '2110'
+	</sql>
+		
+	<select id="getEmpList_paged" resultClass="java.util.HashMap" parameterClass="map">		
+		SELECT RNUM_LIST.*
+		FROM
+		    (
+		    SELECT ROWNUM RNUM, SORT_LIST.* 
+		    FROM
+		        (		
+				SELECT 
+					EMP_NO, EMP_NAME,PLANT1,PLANT2, SEC2		
+				FROM EPM.TB_EMP
+				<include refid="where_getEmpList" />
+				ORDER BY EMP_NAME	
+		        ) SORT_LIST
+		    ) RNUM_LIST
+		WHERE RNUM BETWEEN #pageInfo.startIndex# AND #pageInfo.endIndex#	
+	</select>
+	
+	<select id="getEmpList_count" resultClass="java.util.HashMap" parameterClass="map">				   	
+				SELECT 
+					COUNT(*) count
+				FROM EPM.TB_EMP
+				<include refid="where_getEmpList" />					
+	</select>
+	
+</sqlMap>

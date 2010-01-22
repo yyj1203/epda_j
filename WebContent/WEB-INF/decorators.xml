@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+
+<decorators defaultdir="/sitemesh/decorators">
+    <!-- Any urls that are excluded will never be decorated by Sitemesh -->
+    <excludes>
+        <pattern>/exclude.jsp</pattern>
+        <pattern>/exclude/*</pattern>
+        <pattern>/nseye2*</pattern>
+        <pattern>/guestbook*</pattern>
+    </excludes>
+
+    <decorator name="tabLayout" page="TabLayout.jsp">
+		<!-- 자격종합 -->
+        <pattern>/nsgain/listNsgain.action*</pattern>
+        <pattern>/nsgain/listNsgainMaintenance.action*</pattern>
+		<!-- 현장훈련 -->
+        <pattern>/nsojpm/listNsojpm.action*</pattern>
+        <pattern>/nsojpm/listNsojpmDetail.action*</pattern>
+        <pattern>/nsojpm/insertNsojpm.action*</pattern>
+        <pattern>/nsojpm/replaceNsojpm.action*</pattern>
+        <pattern>/nsojpm/listNsojpmKs.action*</pattern>
+        <pattern>/nsojpm/listNsojpmPgj.action*</pattern>
+        <pattern>/nsojpm/takeUpNsojpmDetail.action*</pattern>
+        <pattern>/nsojpm/takeUpNsojpmKs.action*</pattern>
+        <!-- 자격부여 -->
+        <pattern>/nsapply/listNsapply.action*</pattern>
+        <pattern>/nsapply/listNsapplyCg.action*</pattern>
+        <pattern>/nsapply/listNsapplyMg.action*</pattern>
+        <pattern>/nsapply/listNsapplyPum.action*</pattern>
+    </decorator>
+    
+    <decorator name="noLayout" page="Layout.jsp">
+        <pattern>/nscareer*</pattern>
+        <pattern>/nseye*</pattern>
+        <pattern>/nsgain*</pattern>
+        <pattern>/employ*</pattern>
+        <pattern>/nsojpm*</pattern>
+        <pattern>/nsapply*</pattern>
+    </decorator>
+     
+    <decorator name="tabs" page="LayoutForTabs.jsp" />
+</decorators>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    
+<struts>
+
+    <package name="employ" namespace="/employ" extends="struts-default">
+    	<action name="listEmploy" method="listEmploy" class="com.kps.kcm.action.EmployAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<action name="listEmployPaging" method="listEmployPaging" class="com.kps.kcm.action.EmployAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<action name="listEmployForNsgain" method="listEmployForNsgain" class="com.kps.kcm.action.EmployAction">
+    		<result name="success" type="dispatcher">/employ/PopSabunList.jsp</result>
+    	</action>
+    	
+    	<!-- 사번으로 한국성명을 조회한다 -->
+    	<action name="generateKorname" method="generateKorname" class="com.kps.kcm.action.EmployAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+
+    	<!-- 소속으로 부서조회하기 -->
+    	<action name="getbuseoList" method="getBuseoList" class="com.kps.kcm.action.EmployAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>    			
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 로그인처리를 한다 -->
+    	<action name="loginProc" method="loginProc" class="com.kps.kcm.action.EmployAction">
+    		<result name="success" type="dispatcher">/employ/login.jsp</result>
+    	</action>
+    	
+    </package>
+        
+</struts> 

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    
+<struts>
+    <package name="bidParticipation" namespace="/bidParticipation" extends="struts-default">
+    	<!-- 입찰참여업체을 조회한다. 페이징처리없음 -->
+    	<action name="listBidParticipation" method="listBidParticipation" class="com.kps.bid.action.BidParticipationAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 입찰참여업체을 조회한다. 페이징처리 -->
+    	<action name="listBidParticipationPaging" method="listBidParticipationPaging" class="com.kps.bid.action.BidParticipationAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 입찰참여업체에 글을 등록한다. -->
+    	<action name="insertBidParticipation" method="insertBidParticipation" class="com.kps.bid.action.BidParticipationAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 입찰참여업체을 수정한다. -->
+    	<action name="updateBidParticipation" method="updateBidParticipation" class="com.kps.bid.action.BidParticipationAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 입찰참여업체을 삭제한다. -->
+    	<action name="deleteBidParticipation" method="deleteBidParticipation" class="com.kps.bid.action.BidParticipationAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 입찰참여업체을 읽는다. -->
+    	<action name="readBidParticipation" method="readBidParticipation" class="com.kps.bid.action.BidParticipationAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    </package>
+</struts> 

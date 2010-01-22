@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    
+<struts>
+    <package name="guestbook" namespace="/guestbook" extends="struts-default">
+    	<!-- 방명록을 조회한다. 페이징처리없음 -->
+    	<action name="listGuestbook" method="listGuestbook" class="com.kps.kcm.action.GuestbookAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 방명록을 조회한다. 페이징처리 -->
+    	<action name="listGuestbookPaging" method="listGuestbookPaging" class="com.kps.kcm.action.GuestbookAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 방명록에 글을 등록한다. -->
+    	<action name="insertGuestbook" method="insertGuestbook" class="com.kps.kcm.action.GuestbookAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 방명록을 수정한다. -->
+    	<action name="updateGuestbook" method="updateGuestbook" class="com.kps.kcm.action.GuestbookAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 방명록을 삭제한다. -->
+    	<action name="deleteGuestbook" method="deleteGuestbook" class="com.kps.kcm.action.GuestbookAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    </package>
+</struts> 

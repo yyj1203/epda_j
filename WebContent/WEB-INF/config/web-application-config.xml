@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:flex="http://www.springframework.org/schema/flex" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/flex 
+		http://www.springframework.org/schema/flex/spring-flex-1.0.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security-2.0.4.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+	<!-- 
+		Enable annotation-based configuration. companyService and industryService 
+		(used in the Company Manager sample) are configured using annotations. 
+		Open CompanyDAO.java and IndustryDAO.java for details. 
+	-->
+	<context:annotation-config />
+	<context:component-scan base-package="flex.spring.samples" />
+ 
+	<flex:message-broker>
+		<flex:message-service
+			default-channels="my-streaming-amf,my-longpolling-amf,my-polling-amf" />
+		<flex:secured />
+	</flex:message-broker>
+	
+	<bean id="adminService" class="com.kps.epda.service.AdminScala">
+		<property name="empDao" ref="empDao"/>
+	</bean>
+	<flex:remoting-destination ref="adminService" />
+	
+	<bean id="measService" class="com.kps.epda.service.MeasService">
+		<property name="measDao" ref="measDao"/>
+	</bean>
+	<flex:remoting-destination ref="measService" />
+	
+	<bean id="checkPointService" class="com.kps.epda.service.CheckPointService">
+		<property name="checkPointDao" ref="checkPointDao"/>
+		<property name="commonDao" ref="commonDao"/>
+	</bean>
+	<flex:remoting-destination ref="checkPointService" />
+	
+	<bean id="checkGroupService" class="com.kps.epda.service.CheckGroupService">		
+	</bean>
+	<flex:remoting-destination ref="checkGroupService" />
+		
+	<bean id="measurementService" class="com.kps.epda.service.MeasurementService">		
+	</bean>
+	<flex:remoting-destination ref="measurementService" />
+	
+	<bean id="plantService" class="com.kps.epda.service.PlantService">
+		<property name="plantDao" ref="plantDao"/>
+		<property name="sqlMapBaseDao" ref="sqlMapBaseDao"/>
+		<property name="superLogin" ref="superLogin"/>
+	</bean>
+	<flex:remoting-destination ref="plantService" />
+	
+	<!-- Implementation of ProductDAO using low-level JDBC -->
+	<bean id="productService" class="flex.spring.samples.product.ProductDAO">
+		<constructor-arg ref="dataSource" />
+	</bean>
+
+	<!-- Expose the productDAO bean for BlazeDS remoting -->
+	<flex:remoting-destination ref="productService" />
+
+	<!-- Implementation of ContactDAO using Spring's JdbcTemplate -->
+	<bean id="contactService" class="flex.spring.samples.contact.ContactDAO">
+		<constructor-arg ref="dataSource" />
+	</bean>
+
+	<!-- Expose the contactDAO bean for BlazeDS remoting -->
+	<flex:remoting-destination ref="contactService" />
+
+	<!-- A secured version of productService -->
+	<bean id="securedProductService" class="flex.spring.samples.product.ProductDAO">
+		<flex:remoting-destination />
+		<constructor-arg ref="dataSource" />
+		<security:intercept-methods>
+			<security:protect method="find*" access="ROLE_USER" />
+		</security:intercept-methods>
+	</bean>
+
+	<!-- Messaging destinations -->
+	<flex:message-destination id="chat" />
+	<flex:message-destination id="simple-feed" />
+	<flex:message-destination id="market-feed" allow-subtopics="true" subtopic-separator="." />
+	<flex:jms-message-destination id="jms-chat" jms-destination="chatTopic" /> 	<!-- See configuration of "chatTopic" below -->    	
+
+	<!-- Embedded broker-->
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="vm:(broker:(tcp://localhost:61616)?persistent=false)?marshal=false"/>
+	</bean>
+
+	<!--  JMS Topic -->
+	<bean id="chatTopic" class="org.apache.activemq.command.ActiveMQTopic">
+		<constructor-arg value="sampletopic.flex.jms.chat"/>
+	</bean>
+	
+	<!-- MessageTemplate makes it easy to publish messages -->
+	<bean id="defaultMessageTemplate" class="org.springframework.flex.messaging.MessageTemplate" />
+
+	<!-- Pojo used to start and stop the data feed that pushes data in the 'simple-feed' destination -->
+	<bean id="simpleFeedStarter" class="flex.spring.samples.simplefeed.SimpleFeed">
+		<constructor-arg ref="defaultMessageTemplate" />
+		<flex:remoting-destination />
+	</bean>
+
+	<!-- Pojo used to start and stop the data feed that pushes data in the 'market-feed' destination -->
+	<bean id="marketFeedStarter" class="flex.spring.samples.marketfeed.MarketFeed">
+		<constructor-arg value="stocklist.xml" />
+		<flex:remoting-destination />
+	</bean>
+
+	<!-- Create and populate the tables if the springflexdemodb database -->
+	<bean id="dbInit" class="flex.spring.samples.util.DatabaseInitializer">
+		<constructor-arg ref="dataSource" />
+	</bean>
+
+	<!--
+		Simple Spring-managed DataSource for embedded h2 database
+		(http://www.h2database.com). H2 is used instead of HSQLDB in this Test
+		Drive because it has better support for retrieving autogenerated keys
+		using the JDBC 3 approach which is used by Spring's JdbcTemplate. The
+		"jdbc:h2:~/sprinflexdemodb/sprinflexdemodb" URL points to a
+		springflexdemodb database in the springdemodb directory under the
+		user's directory (represented by ~). H2 creates the database
+		automatically if it doesn't exists, in which case, the dbInit bean
+		takes care of creating and populating the sample tables.
+	-->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.h2.Driver" />
+		<property name="url" value="jdbc:h2:~/sprinflexdemodb/sprinflexdemodb" />
+	</bean>
+
+</beans>

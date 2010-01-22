@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    
+<struts>
+
+    <package name="nsojpm" namespace="/nsojpm" extends="struts-default">    	
+    	<!-- 현장훈련 목록을 얻어옵니다 -->
+    	<action name="listNsojpm" method="listNsojpm" class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="dispatcher">/nsojpm/ListNsojpm.jsp</result>
+    	</action>
+    	<!-- 엑셀 출력용 현장훈련 목록을 얻어옵니다 -->
+    	<action name="listNsojpmForExcel" method="listNsojpmForExcel" class="com.kps.kcm.action.NsojpmAction">
+    		<!-- <result name="success" type="dispatcher">/common/ForExcel.jsp</result> -->
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">1024</param>
+    			<param name="contentDisposition">filename=${parameterMap.excelFilename}</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 현장훈련 상세목록을 얻어옵니다 -->
+    	<action name="listNsojpmDetail" method="listNsojpmDetail" class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="dispatcher">/nsojpm/ListNsojpmDetail.jsp</result>
+    	</action>
+    	<!-- 엑셀 출력용 현장훈련 상세목록을 얻어옵니다 -->
+    	<action name="listNsojpmDetailForExcel" method="listNsojpmDetailForExcel" class="com.kps.kcm.action.NsojpmAction">
+    		<!-- <result name="success" type="dispatcher">/common/ForExcel.jsp</result> -->
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">1024</param>
+    			<param name="contentDisposition">filename=${parameterMap.excelFilename}</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 현장훈련 항목을 새로 생성하기전 중복값이 있는지 찾는다 -->
+    	<action name="checkNsojpmDuplicate" method="checkNsojpmDuplicate" class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">1024</param>
+    		</result>
+    	</action>
+    	<!-- 현장훈련 항목을 새로 생성한다 -->
+    	<action name="insertNsojpm" method="insertNsojpm" class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="dispatcher">/nsojpm/ListNsojpm.jsp</result>
+    	</action>
+    	<!-- 현장훈련 항목을 생성시 중복된 값이 있으면 덮여씌운다 -->
+    	<action name="replaceNsojpm" method="replaceNsojpm" class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="dispatcher">/nsojpm/ListNsojpm.jsp</result>
+    	</action>
+    	<!-- 현장훈련 수정폼을 조회한다 -->
+    	<action name="requestNsojpmUpdateForm" method="requestNsojpmUpdateForm" 
+    		class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="dispatcher">/nsojpm/RequestNsojpmUpdateForm.jsp</result>
+    	</action>
+    	<!-- 현장훈련을 수정한다 -->
+    	<action name="updateNsojpm" method="updateNsojpm" class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="dispatcher">/nsojpm/RequestNsojpmUpdateForm.jsp</result>
+    	</action>
+    	<!-- 현장훈련을 삭제한다 -->
+    	<action name="deleteNsojpm" method="deleteNsojpm" class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">1024</param>
+    		</result>
+    	</action> 
+    	
+    	<!-- 현장훈련 결제 폼을 불러온다 -->
+    	<action name="requestNsojpmSignForm" method="requestNsojpmSignForm" 
+    		class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="dispatcher">/nsojpm/frmSignOJ.jsp</result>
+   		</action>
+    	<!-- 현장훈련 결제를 진행한다 -->
+    	<action name="doNsojpmSign" method="doNsojpmSign" class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="dispatcher">/nsojpm/frmSignOJ.jsp</result>
+   		</action>
+   		
+   		<!-- 현장훈련 강사결재 탭 조회 -->
+   		<action name="listNsojpmKs" method="listNsojpmKs" class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="dispatcher">/nsojpm/ListNsojpmKs.jsp</result>
+    	</action>
+    	<!-- 엑셀 출력용 현장훈련 강사결재목록을 얻어옵니다 -->
+    	<action name="listNsojpmKsForExcel" method="listNsojpmKsForExcel" class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">1024</param>
+    			<param name="contentDisposition">filename=${parameterMap.excelFilename}</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 현장훈련 평가자결재 탭 조회 -->
+   		<action name="listNsojpmPgj" method="listNsojpmPgj" class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="dispatcher">/nsojpm/ListNsojpmPgj.jsp</result>
+    	</action>
+    	<!-- 엑셀 출력용 현장훈련 평가자결재목록을 얻어옵니다 -->
+    	<action name="listNsojpmPgjForExcel" method="listNsojpmPgjForExcel" class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">1024</param>
+    			<param name="contentDisposition">filename=${parameterMap.excelFilename}</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 현장훈련 세부내역 결재회수 -->
+    	<action name="takeUpNsojpmDetail" method="takeUpNsojpmDetail" class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="dispatcher">/nsojpm/ListNsojpmDetail.jsp</result>
+    	</action>
+    	<!-- 현장훈련 강사결재 결재회수 -->
+    	<action name="takeUpNsojpmKs" method="takeUpNsojpmKs" class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="dispatcher">/nsojpm/ListNsojpmKs.jsp</result>
+    	</action>
+    	
+    	<!-- 현장훈련 결재반려 폼을 조회한다 -->
+    	<action name="requestNsojpmReturnForm" method="requestNsojpmReturnFrom" class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="dispatcher">/nsojpm/RequestNsojpmReturnForm.jsp</result>
+    	</action>
+    	<!-- 현장훈련 결재 반려를 진행한다 -->
+    	<action name="returnNsojpm" method="doNsojpmSign" class="com.kps.kcm.action.NsojpmAction">
+    		<result name="success" type="dispatcher">/nsojpm/RequestNsojpmReturnForm.jsp</result>
+    	</action>
+    	
+    </package>
+    
+</struts> 

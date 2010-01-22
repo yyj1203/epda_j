@@ -1,0 +1,21 @@
+package com.kps.epm.service
+
+import _root_.scala.collection.jcl.Conversions
+import com.kps.epm.model._
+import Model._
+
+class EmpOps {
+   def list = {
+    val q = Model.createNamedQuery[Tb_Emp]("findAllEmps").getResultList
+    //val q = Model.createNativeQuery[Tb_Emp]("select emp_no, emp_name, plant1, plant2 from Tb_Emp where plant1 = '2110'").getResultList  
+    var r = Conversions.unconvertList[Tb_Emp](q)
+   
+    val ww = r.get(0).asInstanceOf[Tb_Emp]
+    
+    println ("ddd" + ww.emp_name)
+    null
+  }
+ 
+}
+
+

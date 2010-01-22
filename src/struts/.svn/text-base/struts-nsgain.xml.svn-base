@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    
+<struts>
+
+    <package name="nsgain" namespace="/nsgain" extends="struts-default">    	
+    	<!-- 자격종합 목록을 얻어옵니다 -->
+    	<action name="listNsgain" method="listNsgain" class="com.kps.kcm.action.NsgainAction">
+    		<result name="success" type="dispatcher">/nsgain/ListNsgain.jsp</result>
+    	</action>
+    	<!-- 상세보기 자격종합 목록을 얻어옵니다 -->
+    	<action name="listNsgainDetail" method="listNsgainNoPaging" class="com.kps.kcm.action.NsgainAction">
+    		<result name="success" type="dispatcher">/nsgain/ListNsgainDetail.jsp</result>
+    	</action>
+    	<!-- 엑셀 출력용 자격종합 목록을 얻어옵니다 -->
+    	<action name="listNsgainForExcel" method="listNsgainForExcel" class="com.kps.kcm.action.NsgainAction">
+    		<!-- <result name="success" type="dispatcher">/common/ForExcel.jsp</result> -->
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">1024</param>
+    			<param name="contentDisposition">filename=${parameterMap.excelFilename}</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 자격종합 유지대상자 목록을 얻어옵니다 -->
+    	<action name="listNsgainMaintenance" method="listNsgainMaintenance" 
+    		class="com.kps.kcm.action.NsgainAction">
+    		<result name="success" type="dispatcher">/nsgain/ListNsgainMaintenance.jsp</result>
+    	</action>
+    	
+    	<!-- 종목별 자격수를 얻어온다(차트) -->
+    	<action name="cntNsgainJmok" method="cntNsgainJmok" class="com.kps.kcm.action.NsgainAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">1024</param>
+    		</result> 
+    	</action>
+    	
+    	<!-- 연도별 자격수를 얻어온다(차트) -->
+    	<action name="cntNsgainYear" method="cntNsgainYear" class="com.kps.kcm.action.NsgainAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">1024</param>
+    		</result>
+    	</action>
+    	
+    </package>
+        
+</struts> 

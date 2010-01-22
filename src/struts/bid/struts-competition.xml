@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    
+<struts>
+    <package name="competition" namespace="/competition" extends="struts-default">
+    	<!-- 경쟁사을 조회한다. 페이징처리없음 -->
+    	<action name="listCompetition" method="listCompetition" class="com.kps.bid.action.CompetitionAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 경쟁사을 조회한다. 페이징처리 -->
+    	<action name="listCompetitionPaging" method="listCompetitionPaging" class="com.kps.bid.action.CompetitionAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 경쟁사에 글을 등록한다. -->
+    	<action name="insertCompetition" method="insertCompetition" class="com.kps.bid.action.CompetitionAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 경쟁사을 수정한다. -->
+    	<action name="updateCompetition" method="updateCompetition" class="com.kps.bid.action.CompetitionAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 경쟁사을 삭제한다. -->
+    	<action name="deleteCompetition" method="deleteCompetition" class="com.kps.bid.action.CompetitionAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 경쟁사을 읽는다. -->
+    	<action name="readCompetition" method="readCompetition" class="com.kps.bid.action.CompetitionAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    </package>
+</struts> 

@@ -1,0 +1,102 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="vwMeas">	
+	<resultMap class="java.util.HashMap" id="joinMap">			
+		<result column="MEAS_SPT" property="MEAS_SPT"  jdbcType="CLOB" javaType="java.lang.String"/>
+		<result column="UNIT_NAME" property="UNIT_NAME"/>	
+	</resultMap> 
+	
+	<select id="getMeasTrend" resultMap="joinMap" parameterClass="map">
+		SELECT q.MEAS_SPT,                                                
+		       (SELECT NVL(UNIT_NAME, '-')                                
+		          FROM EPDA.TB_UNIT un                                    
+		         WHERE q.UNIT_SEQ = un.UNIT_SEQ                           
+		       ) UNIT_NAME                                                
+		  FROM (SELECT (SELECT UNIT_SEQ                                   
+		                  FROM EPDA.TB_ITEM it                            
+		                 WHERE it.ITEM_SEQ = p.ITEM_SEQ                   
+		               ) UNIT_SEQ,                                        
+		               p.*                                                
+		          FROM (SELECT ITEM_SEQ,                                  
+		                       MEAS_SPT                                   
+		                  FROM TB_MEAS                                    
+		                 WHERE POINT_SEQ                               = #POINT_SEQ#
+		                   AND ITEM_SEQ                                = #ITEM_SEQ#
+		                   AND TO_CHAR(MEAS_DTIME, 'YYYYMMDDHH24MISS') = #MEAS_DTIME#
+		               ) p                                                
+		       ) q                                                        
+		
+	</select>
+	
+	<sql id="select_getMeasList">
+		SELECT 
+			MEAS_DTIME_ORG,
+			MEAS_CNT,
+			MEAS_VALUE,
+			MEAS_STS,
+			MEAS_PDA,
+			AUFNR,
+			MEAS_MACH,
+			MEAS_DES,
+			OIL_CD,
+			IWERK,
+			SWERK,
+			BEBER,
+			TPLNR,
+			POINT_NAME,
+			ITEM_TARG,
+			ITEM_MIN,
+			ITEM_MAX,
+			UNIT_SEQ,
+			ITEM_KIND,
+			SCHD_NAME,
+			UNIT_NAME,
+			UNIT_FORM,
+			KIND_NAME,
+			MEAS_STS_NAME,
+			CG_SEQ,
+			CGNAME,
+			WKCNT,
+			CG_SCHD,
+			POINT_SEQ,
+			ITEM_SEQ,
+			ITEM_NAME,
+			MEAS_DTIME
+		FROM EPDA.VW_MEAS
+	</sql>
+	
+	<sql id="where_getMeasList">
+		WHERE 1=1
+		<isNotEmpty prepend="AND" property="ITEM_KIND">
+			ITEM_KIND = #ITEM_KIND#
+		</isNotEmpty>
+	</sql>	
+	
+	<sql id="order_getMeasList">
+		ORDER BY MEAS_DTIME DESC
+	</sql>
+	
+	<select id="getMeasList_count" resultClass="java.util.HashMap" parameterClass="map">				   	
+		SELECT 
+			COUNT(*) COUNT
+		FROM EPDA.VW_MEAS
+		<include refid="where_getMeasList" />					
+	</select>
+	
+	<select id="getMeasList_paged" resultClass="java.util.HashMap" parameterClass="map">		
+		SELECT RNUM_LIST.*
+		FROM
+		    (
+		    SELECT ROWNUM RNUM, SORT_LIST.* 
+		    FROM
+		        (		
+				<include refid="select_getMeasList" />	
+				<include refid="where_getMeasList" />
+				<include refid="order_getMeasList" />	
+		        ) SORT_LIST
+		    ) RNUM_LIST
+		WHERE RNUM BETWEEN #pageInfo.startIndex# AND #pageInfo.endIndex#	
+	</select>	
+	
+</sqlMap>
+

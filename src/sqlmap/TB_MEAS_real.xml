@@ -1,0 +1,108 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="meas">
+	
+	<resultMap class="java.util.HashMap" id="joinMap">
+	  <result column="MUSER2" property="MUSER2"/>
+	  <result column="MUSER3" property="MUSER3"/>
+	  <result column="MUSER4" property="MUSER4"/>
+	  <result column="MUSER5" property="MUSER5"/>
+	  <result column="MUSER1" property="MUSER1"/>
+	  <result column="CG_SEQ" property="CG_SEQ"/>
+	  <result column="POINT_SEQ" property="POINT_SEQ"/>
+	  <result column="ITEM_SEQ" property="ITEM_SEQ"/>
+	  <result column="MEAS_DTIME" property="MEAS_DTIME"/>
+	  <result column="MEAS_CNT" property="MEAS_CNT"/>
+	  <result column="MEAS_VALUE" property="MEAS_VALUE"/>
+	  <result column="MEAS_STS" property="MEAS_STS"/>
+	  <result column="MEAS_STF" property="MEAS_STF"/>
+	  <result column="MEAS_PDA" property="MEAS_PDA"/>
+	  <result column="AUFNR" property="AUFNR"/>
+	  <result column="MEAS_MACH" property="MEAS_MACH"/>
+	  <result column="MEAS_DES" property="MEAS_DES"/>
+	  <result column="OIL_CD" property="OIL_CD"/>
+	  <result column="MEAS_IMGN" property="MEAS_IMGN"/>
+	  <result column="MEAS_FILE" property="MEAS_FILE"/>
+	  <result column="MEAS_PATH" property="MEAS_PATH"/>
+	  <result column="MEAS_USER" property="MEAS_USER"/>
+	  <result column="MEAS_IDATE" property="MEAS_IDATE"/>
+	  <result column="MEAS_SPT" property="MEAS_SPT"  jdbcType="CLOB" javaType="java.lang.String"/>	
+	</resultMap> 
+	 
+	 
+	<select id="getTables" resultClass="java.util.HashMap">
+		SELECT table_name	
+		FROM user_tables			
+	</select>
+	
+	<select id="getColumnList" resultClass="java.util.HashMap">
+		SELECT column_name, data_type	
+		FROM all_tab_columns
+		WHERE table_name like '%' || #table_name# || '%'		
+	</select>
+	
+	<select id="getCgitemList" resultClass="java.util.HashMap">
+		SELECT 
+			CG_SEQ,
+			POINT_SEQ,
+			ITEM_SEQ,
+			CI_STS,
+			CI_IND,
+			IUSER,
+			IDATE
+		FROM TB_CGITEM
+	</select>
+	
+	<select id="getCsgrpList" resultClass="java.util.HashMap">
+		SELECT 
+			CG_SEQ,
+			IWERK,
+			SWERK,
+			WKCNT,
+			CG_CD,
+			CG_STS,
+			BEBER,
+			CG_SCHD,
+			CGNAME,
+			CG_IND,
+			IUSER,
+			IDATE,
+			CGTYPE
+		FROM TB_CSGRP
+	</select>
+	
+	<select id="select" resultMap="joinMap">
+	    SELECT
+			MUSER2,
+			MUSER3,
+			MUSER4,
+			MUSER5,
+			MUSER1,
+			CG_SEQ,
+			POINT_SEQ,
+			ITEM_SEQ,
+			MEAS_DTIME,
+			MEAS_CNT,
+			MEAS_VALUE,
+			MEAS_STS,
+			MEAS_STF,
+			MEAS_PDA,
+			AUFNR,
+			MEAS_MACH,
+			MEAS_DES,
+			OIL_CD,
+			MEAS_IMGN,
+			MEAS_FILE,
+			MEAS_PATH,
+			MEAS_USER,
+			MEAS_IDATE,
+			MEAS_SPT
+	    FROM TB_MEAS
+	    WHERE meas_dtime BETWEEN to_date('20090612', 'YYYYMMDD') and to_date('20090613', 'YYYYMMDD')
+	    AND meas_spt is not null
+	    
+	
+	</select>
+	<!-- to_date(to_char(sysdate, 'YYYYMMDD'), 'YYYYMMDD') -->
+</sqlMap>

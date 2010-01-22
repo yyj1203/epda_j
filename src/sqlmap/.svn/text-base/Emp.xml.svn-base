@@ -1,0 +1,18 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="emp">
+	
+	<select id="getEmpList" resultClass="java.util.HashMap">
+		SELECT 
+			EMP_NO, 
+			EMP_NAME,
+			PLANT1,
+			PLANT2,
+			SEC2		
+		FROM TB_EMP
+		Where plant1 = '2110'
+		AND sec2 is not null
+	</select>
+
+</sqlMap>

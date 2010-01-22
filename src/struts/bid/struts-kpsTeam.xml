@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    
+<struts>
+    <package name="kpsTeam" namespace="/kpsTeam" extends="struts-default">
+    	<!-- 팀을 조회한다. 페이징처리없음 -->
+    	<action name="listKpsTeam" method="listKpsTeam" class="com.kps.bid.action.KpsTeamAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 팀을 조회한다. 페이징처리 -->
+    	<action name="listKpsTeamPaging" method="listKpsTeamPaging" class="com.kps.bid.action.KpsTeamAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 팀에 글을 등록한다. -->
+    	<action name="insertKpsTeam" method="insertKpsTeam" class="com.kps.bid.action.KpsTeamAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 팀을 수정한다. -->
+    	<action name="updateKpsTeam" method="updateKpsTeam" class="com.kps.bid.action.KpsTeamAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 팀을 삭제한다. -->
+    	<action name="deleteKpsTeam" method="deleteKpsTeam" class="com.kps.bid.action.KpsTeamAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    	<!-- 팀을 읽는다. -->
+    	<action name="readKpsTeam" method="readKpsTeam" class="com.kps.bid.action.KpsTeamAction">
+    		<result name="success" type="stream">
+    			<param name="inputName">inputStream</param>
+    			<param name="contentType">text/plain</param>
+    			<param name="bufferSize">4096</param>
+    		</result>
+    	</action>
+    	
+    </package>
+</struts> 

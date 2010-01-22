@@ -1,0 +1,182 @@
+Application,global {
+	fontFamily:Gulim;
+	fontWeight:normal;
+	fontSize:12;
+	color: #444444; /*#797979;*/
+	
+}
+ComboBox {
+	fontWeight: normal;	
+}
+
+Button {
+	fontWeight: normal;	
+}
+
+ToolTip { 	        
+    fontSize: 12; 	
+}
+
+.errorTip {
+	font-size: 12;	
+}
+
+.centered {
+    text-align:center;     
+    fontWeight: bold;      
+}
+	    
+.TxtTitle {
+	fontWeight: bold;
+	fontSize: 13;
+	color: #333333;
+	textvalign: top;
+}
+
+
+.GridPurple{
+	backgroundColor : /*#e0ecf7;  #F7F7F7; */ #e0ecf7;
+	fillColors: /*#F7F7F7, #F7F7F7;*/ #e0ecf7, #e0ecf7;
+	/*color           : #8269b0;*/
+	textAlign       : left;
+	textvalign      : bottom;
+	fontWeight      : normal;
+	padding-top     : 5;
+	padding-right   : 0;
+	padding-bottom  : 3;
+	padding-left    : 0;
+}
+
+.GridHaloSilver{
+	backgroundColor: #ADE7E7; /*#b2e1ff;#dfefff; */
+	color: #1c4558;
+	textvalign:bottom;
+	padding-top:5;
+	padding-bottom:5;
+	padding-left:0;
+	padding-right:0;
+	/*fontWeight:bold; */
+}
+
+.GridDataYellow{
+	backgroundColor : #ffffcc;
+	textAlign:left;
+	textValign:bottom;
+	padding-top:5;
+	padding-bottom:4;
+	padding-left:5;
+	padding-right:0;
+}
+
+.GridLinePurple{
+	backgroundColor : #bbadd5;
+}
+
+.BoxPurple{
+	backgroundColor : #e8dff9;
+}
+		
+/*공통사용*/
+.GridData{
+	backgroundColor : #FFFFFF;
+	textAlign       : left;
+	textValign      : bottom;
+	paddingTop      :  7;
+	paddingRight    :  0;
+	paddingBottom   :  5;
+	paddingLeft     :  15;
+}
+
+/**/
+.GridLabel{
+	backgroundColor: #dfefff;
+	color: #27779c;
+	textAlign:center;
+	textvalign:bottom;
+	padding-top:7;
+	padding-bottom:5;
+	padding-left:0;
+	padding-right:0;
+}
+.GridLabel2Depth{
+	backgroundColor: #F7F7F7;
+	color: #27779c;
+	textAlign:center;
+	textvalign:bottom;
+	padding-top:7;
+	padding-bottom:5;
+	padding-left:0;
+	padding-right:0;
+}
+.GridLabelBlue{
+	backgroundColor: #dfefff;
+	color: #1c4558;
+	textvalign:bottom;
+	padding-top:5;
+	padding-bottom:5;
+	padding-left:0;
+	padding-right:0;
+	/*fontWeight:bold;*/
+}
+.GridLabelNoBG{
+	color: #27779c;
+	textAlign:center;
+	textvalign:bottom;
+	padding-top:5;
+	padding-bottom:5;
+	padding-left:0;
+	padding-right:0;
+}
+.GridData{
+	backgroundColor: #FFFFFF;
+	textAlign:left;
+	textValign:bottom;
+	padding-top:5;
+	padding-bottom:4;
+	padding-left:5;
+	padding-right:0;
+}
+.GridData2{
+	backgroundColor: #FFFFFF;	
+	textAlign:center;
+	textValign:bottom;
+	padding-top:5;
+	padding-bottom:5;
+	padding-left:5;
+	padding-right:5;
+}
+.GridDataCenter{
+	backgroundColor: #FFFFFF;
+	textAlign:center;
+	textValign:bottom;
+	padding-top:5;
+	padding-bottom:5;
+	padding-left:5;
+	padding-right:5;
+}
+.GridDataRight{
+	backgroundColor: #FFFFFF;
+	textAlign:Right;
+	textValign:bottom;
+	padding-top:5;
+	padding-bottom:5;
+	padding-left:5;
+	padding-right:5;
+}
+.GridDataBlue{
+	backgroundColor: #dfefff;
+	textAlign: right;
+	textValign: bottom;
+	padding-top:5;
+	padding-bottom:5;
+	padding-left:5;
+	padding-right:5;
+}
+
+FormItem {
+    labelStyleName: customTextAlignLabel;
+}
+.customTextAlignLabel {
+    textAlign: left;
+}
+

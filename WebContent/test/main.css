@@ -1,0 +1,52 @@
+@CHARSET "EUC-KR";
+
+body{ FONT-FAMILY: "dotum","gulim","Verdana","Tahoma","arial"; FONT-SIZE: 9pt; }
+*{ padding: 0px; margin: 0px; }
+
+/**전체 엘리먼트를 감싸는 div */
+#all{
+	width: 1070px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/**머릿글 */
+#top{
+	width: 1070px;
+	float: left;
+}
+
+/**왼쪽 메뉴*/
+#left{
+	width: 195px;
+	height: 400px;
+	float: left;
+}
+/**왼쪽 메뉴 ul*/
+#left ul{
+	
+}
+/**왼쪽 메뉴 li*/
+#left ul li{
+	margin-left: 30px;
+	padding-top: 20px;
+	font-size: 15px;
+}
+
+/**내용 */
+#right{
+	width: 875px; 
+	height: 400px;
+	float: left;
+}
+/**내용에 들어갈 iframe */
+#right iframe{
+	width: 855px; /*좌우 패딩값 10px씩을 빼줌 875px - 10px(좌 패딩) - 10px(우 패딩) = 855px; */
+	height: 380px; /*상하 패딩값 10px씩을 빼줌 400px - 10px(상 패딩) - 10px(하 패딩) = 380px; */
+	padding: 10px;
+}
+
+/**바닦글 */
+#bottom{
+	clear: both;
+}

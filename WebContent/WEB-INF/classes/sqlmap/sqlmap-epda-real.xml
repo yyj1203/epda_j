@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+	<settings cacheModelsEnabled="true"/>
+	
+  	<transactionManager type="JDBC" commitRequired="false">
+	    <dataSource type="SIMPLE" >
+	      <property name="JDBC.Driver" value="oracle.jdbc.driver.OracleDriver"/>
+	      <property name="JDBC.ConnectionURL" value="jdbc:oracle:thin:@10.11.11.122:1521:KPS"/>
+	      <property name="JDBC.Username" value="epda"/>
+	      <property name="JDBC.Password" value="kpsepda"/>
+	<!--       <property name="Pool.MaximumActiveConnections" value="2"/>
+	      <property name="Pool.MaximumIdleConnections" value="1"/>
+	      <property name="Pool.MaximumWait" value="20000"/> -->
+	    </dataSource>
+  	</transactionManager>
+	
+	<sqlMap resource="sqlmap_epm/TB_MEAS_real.xml"/>
+	
+</sqlMapConfig>

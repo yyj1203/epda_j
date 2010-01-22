@@ -1,0 +1,302 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="plant">
+
+	<typeAlias alias="CodeMap" type="com.kps.common.dto.CodeMap"/>
+	
+	<cacheModel id="plantCache" type="MEMORY">
+	    <flushInterval hours="12"/>
+	    <!-- <flushOnExecute statement="modifyPlant"/>	 -->    
+	    <property name="reference-type" value="SOFT"/>
+  	</cacheModel>	
+	
+	<select id="getPlantCodeList" resultClass="CodeMap" >
+		SELECT 
+			A.PLANT_CODE data,
+			A.PLANT_NAME label			
+		FROM EPM.TB_PLANT A, EPM.TB_COMPANY B
+		WHERE A.CO_CODE = B.CO_CODE 
+		AND A.PLANT_IND = '0'
+		<isNotEmpty property="DEV_SRC">
+			AND B.DEV_SRC = #DEV_SRC#
+		</isNotEmpty>	
+		ORDER BY A.PLANT_CODE
+	</select>
+	
+	<select id="getPlantAndCompanyList" resultClass="java.util.HashMap">
+		SELECT 
+			A.PLANT_CODE,
+			A.PLANT_NAME,
+			A.CO_CODE COMPANY_CODE,
+			(SELECT CO_NAME FROM EPM.TB_COMPANY WHERE CO_CODE=A.CO_CODE) COMPANY_NAME			
+		FROM EPM.TB_PLANT A
+		WHERE A.PLANT_IND = '0'		
+		ORDER BY A.CO_CODE	
+	</select>	
+	
+	<select id="getRadiationPlantCodeList" resultClass="CodeMap">
+		SELECT 
+			PLANT_CODE data,
+			PLANT_NAME label			
+		FROM EPM.TB_PLANT
+		WHERE PLANT_IND in ('0', '9')
+		AND	RADIATION_YN = 'Y'	
+		ORDER BY PLANT_CODE
+	</select>
+	
+	<select id="selectAllPlantRad" resultClass="java.util.HashMap">
+		SELECT 
+			PLANT_CODE,
+			PLANT_NAME			
+		FROM EPM.TB_PLANT
+		WHERE PLANT_IND in ('0', '9')
+		AND	RADIATION_YN = 'Y'	
+		ORDER BY PLANT_CODE
+	</select>	
+	
+	<select id="getMPlantCodeList" resultClass="CodeMap" >
+		SELECT 
+			PLANT_CODE data,
+			PLANT_NAME label			
+		FROM EPM.TB_PLANT
+		WHERE PLANT_IND = '1'	
+		AND PARENT_PLANT_CODE LIKE #SCH_PARENT_PLANT_CODE# || '%'
+		ORDER BY PLANT_CODE
+	</select>	
+	
+	<!-- 계획플랜트(사업소)/유지보수플랜트(발전원) 검색 -->	
+	<select id="selectAllPlant" resultClass="java.util.HashMap">
+		SELECT 
+			PLANT_CODE,
+			PLANT_NAME,
+			PLANT_IND,
+			HR_CODE,
+			HR_NAME,
+			PARENT_PLANT_IND,
+			PARENT_PLANT_CODE,
+			ZIP_CODE,
+			ADDR,
+			TEL,
+			CO_CODE
+		FROM EPM.TB_PLANT
+		WHERE PLANT_IND = #SCH_PLANT_IND#
+		<isNotEmpty prepend="AND" property="SCH_PARENT_PLANT_CODE">
+			PARENT_PLANT_IND = '0'
+			AND PARENT_PLANT_CODE = #SCH_PARENT_PLANT_CODE#
+		</isNotEmpty>
+
+		<isNotNull prepend="" property="SCH_PLANT_GUBUN">
+			<isEqual prepend="" property="SCH_PLANT_GUBUN" compareValue="20">
+				AND PLANT_CODE NOT LIKE '3%'
+				AND PLANT_CODE NOT LIKE '4%'
+			</isEqual>
+			<isEqual prepend="" property="SCH_PLANT_GUBUN" compareValue="30">
+				AND PLANT_CODE NOT LIKE '2%'
+				AND PLANT_CODE NOT LIKE '4%'
+			</isEqual>
+			<isEqual prepend="" property="SCH_PLANT_GUBUN" compareValue="40">
+				AND PLANT_CODE NOT LIKE '2%'
+				AND PLANT_CODE NOT LIKE '3%'
+			</isEqual>				
+		</isNotNull>
+		ORDER BY PLANT_CODE
+	</select>
+	
+	<!-- 계획플랜트(사업소)/유지보수플랜트(발전원) 조회 -->
+	<select id="selectPlant" resultClass="java.util.HashMap">
+		SELECT 
+			PLANT_CODE,
+			PLANT_NAME,
+			PLANT_IND,
+			HR_CODE,
+			HR_NAME,
+			PARENT_PLANT_IND,
+			PARENT_PLANT_CODE,
+			ZIP_CODE,
+			ADDR,
+			TEL,
+			CO_CODE
+		FROM EPM.TB_PLANT
+		WHERE PLANT_IND = #V_PLANT_IND#
+			AND PLANT_CODE = #V_PLANT_CODE#
+	</select>
+	
+	<!-- 플랜트섹션(호기)/계획자그룹(정비팀)/작업장(정비조직) 검색 -->	
+	<select id="selectAllSec" resultClass="java.util.HashMap">
+		SELECT 
+		    SEC_CODE,
+		    SEC_NAME,
+		    SEC_IND,
+		    PLANT_CODE,
+		    PLANT_NAME,
+		    PLANT_IND,
+		    HR_CODE,
+		    HR_NAME
+		FROM EPM.TB_SEC
+		WHERE SEC_IND = #SCH_SEC_IND#
+			AND PLANT_CODE = #SCH_PLANT_CODE#
+		ORDER BY SEC_CODE
+	</select>
+	
+	<!-- 플랜트섹션(호기)/계획자그룹(정비팀)/작업장(정비조직) 검색 -->	
+	<select id="getSECList" resultClass="CodeMap">
+		SELECT 
+		    SEC_CODE data,
+		    SEC_NAME label		    
+		FROM EPM.TB_SEC		
+		WHERE PLANT_CODE = #PLANT_CODE#
+		<isNotEmpty prepend="AND" property="SEC_IND"> SEC_IND = #SEC_IND#</isNotEmpty>
+		<isNotEmpty prepend="AND" property="PLANT_IND"> PLANT_IND = #PLANT_IND#</isNotEmpty>
+		ORDER BY SEC_CODE
+	</select>
+	
+	<!-- 플랜트섹션(호기)/계획자그룹(정비팀)/작업장(정비조직) 조회 -->
+	<select id="selectSec" resultClass="java.util.HashMap">
+		SELECT 
+		    SEC_CODE,
+		    SEC_NAME,
+		    SEC_IND,
+		    PLANT_CODE,
+		    PLANT_NAME,
+		    PLANT_IND,
+		    HR_CODE,
+		    HR_NAME
+		FROM EPM.TB_SEC
+		WHERE PLANT_IND = #V_PLANT_IND#
+			AND PLANT_CODE = #V_PLANT_CODE#
+			AND SEC_IND = #V_SEC_IND#
+			AND SEC_CODE = #V_SEC_CODE#
+	</select>
+	
+	<!-- 사업소별 오더유형 검색 -->	
+	<select id="selectAllOrderType" resultClass="java.util.HashMap">
+		SELECT 
+			O.ODR_GRP_CODE, 
+			O.ODR_CODE, 
+			O.ODR_NAME, 
+			O.KPS_ODR_CODE, 
+			O.KPS_ODR_NAME			
+		FROM EPM.TB_PLANT P, EPM.TB_ODR_MAP M, EPM.TB_ODR_GRP G, EPM.TB_ODR O
+		WHERE P.CO_CODE=M.CO_CODE
+			AND M.ODR_GRP_CODE = G.ODR_GRP_CODE
+			AND G.ODR_GRP_CODE = O.ODR_GRP_CODE
+			AND P.PLANT_CODE = #SCH_PLANT_CODE#
+			AND P.PLANT_IND = '0'
+	</select>
+
+	<!-- 사업소별 오더유형 검색2 -->	
+	<select id="getOrderTypeList" resultClass="CodeMap">
+		SELECT 			
+			O.ODR_CODE data, 
+			O.ODR_CODE || '-' || O.ODR_NAME label				
+		FROM EPM.TB_PLANT P, EPM.TB_ODR_MAP M, EPM.TB_ODR_GRP G, EPM.TB_ODR O
+		WHERE P.CO_CODE=M.CO_CODE
+			AND M.ODR_GRP_CODE = G.ODR_GRP_CODE
+			AND G.ODR_GRP_CODE = O.ODR_GRP_CODE
+			AND P.PLANT_CODE = #SCH_PLANT_CODE#
+			AND P.PLANT_IND = '0'			
+		ORDER BY O.ODR_GRP_CODE DESC, O.ODR_CODE ASC
+	</select>
+	
+	<!-- 사업소의 계획자 그룹 검색 -->	
+	<select id="selectAllPGroup" resultClass="java.util.HashMap">
+		Select SEC_CODE, SEC_NAME, PLANT_CODE, 1 DEPT_IND,
+			(	SELECT PLANT_NAME 
+				FROM EPM.TB_PLANT 
+				WHERE PLANT_CODE=#SCH_IWERK# AND PLANT_IND='0') PLANT_NAME
+		From EPM.TB_SEC
+		Where PLANT_CODE=#SCH_IWERK#
+			AND	SEC_IND='1'
+	</select>
+	
+	<!-- 사업소하위  전체  작업장 검색 -->	
+	<select id="selectAllWrkGroup" resultClass="java.util.HashMap">
+		Select A.PLANT_CODE, A.SEC_CODE, A.DEPT_CODE, A.DEPT_IND, 
+		       CONCAT(A.PLANT_CODE, A.DEPT_CODE)WRK_CODE,
+		      ( SELECT SEC_NAME FROM EPM.TB_SEC
+		      	WHERE PLANT_CODE=#SCH_IWERK#
+		      	AND PLANT_IND='1'
+		      	AND SEC_CODE=A.DEPT_CODE
+		      	AND SEC_IND='2'
+		       )DEPT_NAME
+		From EPM.TB_PLAN_WRK A
+		Where PLANT_CODE=#SCH_IWERK#
+		Order By SEC_CODE, DEPT_CODE
+	</select>	
+	
+	<!-- 사업소하위  전체  작업장 검색  : 조직 트리 구성   캐싱 -->	
+	<select id="getWorkGroupList" resultClass="java.util.HashMap" cacheModel="plantCache">
+		Select  A.PLANT_CODE, 
+        	(	SELECT PLANT_NAME 
+				FROM EPM.TB_PLANT 
+				WHERE PLANT_CODE= #plantCode# AND PLANT_IND='0') PLANT_NAME,
+    		A.SEC_CODE, 
+          	( SELECT SEC_NAME FROM EPM.TB_SEC
+		      	WHERE PLANT_CODE= #plantCode#
+		      	AND PLANT_IND='0'
+		      	AND SEC_CODE = A.SEC_CODE
+		      	AND SEC_IND='1'
+		    ) SEC_NAME,
+          	A.DEPT_CODE, A.DEPT_IND, 
+		    CONCAT(A.PLANT_CODE, A.DEPT_CODE) WRK_CODE,
+		    ( SELECT NVL(SEC_NAME,' ') FROM EPM.TB_SEC
+		      	WHERE PLANT_CODE= #plantCode#
+		      	AND PLANT_IND='1'
+		      	AND SEC_CODE=A.DEPT_CODE
+		      	AND SEC_IND='2'
+		    ) DEPT_NAME
+		From EPM.TB_PLAN_WRK A
+		Where PLANT_CODE= #plantCode#
+		Order By SEC_CODE, DEPT_CODE
+	</select>	
+	
+		<!-- 계획자그룹별   작업장 검색 -->	
+	<select id="selectAllSecWrkGroup" resultClass="CodeMap">
+		 SELECT 
+		     A.DEPT_CODE data,		       
+		      ( SELECT SEC_NAME FROM EPM.TB_SEC
+		      	WHERE PLANT_CODE = #plantCode#
+		      	AND PLANT_IND='1'
+		      	AND SEC_CODE=A.DEPT_CODE
+		      	AND SEC_IND='2'
+		       ) label
+		       
+		FROM EPM.TB_PLAN_WRK A
+		WHERE PLANT_CODE = #plantCode#
+		AND PLANT_IND = '0'		
+		<isNotEmpty property="secCode">AND SEC_CODE = #secCode# </isNotEmpty>		
+		AND SEC_IND = '1'
+		ORDER BY DEPT_CODE
+	</select>	
+	
+	<select id="getGroupCodeList" resultClass="CodeMap">
+		SELECT CG_SEQ data,      
+       		CG_CD label   
+<!--	       	CGNAME,      -->
+<!--	       	CG_IND       -->
+	  	FROM EPDA.TB_CSGRP
+	 	WHERE IWERK  = #IWERK#   
+	   	AND SWERK  = #SWERK#   
+	   	AND CG_STS = 'Y' 
+	 	ORDER BY CG_IND    	
+	</select>
+	
+	<select id="getCommonCode" resultClass="CodeMap">
+		SELECT 			
+			<isEqual prepend="" property="pIndex" compareValue="2">
+				CCOD_CD2 data, 
+			</isEqual>
+			<isEqual prepend="" property="pIndex" compareValue="3">
+				CCOD_CD3 data, 
+			</isEqual> 	            
+	       	CCOD_DES label       
+	  	FROM EVIB.TB_CCOD   
+		WHERE CCOD_CD1 = #CCOD_CD1#   
+	   	AND CCOD_CD3 = '00'
+	   	AND CCOD_STS = 'Y' 
+	 	ORDER BY CCOD_CD4    
+		
+	</select>
+	
+</sqlMap>

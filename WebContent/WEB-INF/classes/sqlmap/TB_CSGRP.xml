@@ -1,0 +1,147 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="tbCsgrp">	
+	<typeAlias alias="CodeMap" type="com.kps.common.dto.CodeMap"/>
+	
+	<select id="getGroups" resultClass="java.util.HashMap">
+		<!-- UPDATE TB_CSGRP T1
+		SET INGRP = (SELECT SEC_CODE FROM EPM.TB_PLAN_WRK WHERE PLANT_CODE = T1.IWERK AND DEPT_CODE = T1.WKCNT)  -->
+		SELECT 
+			A.CG_SEQ,
+			A.IWERK,
+			A.SWERK,
+			A.BEBER,
+			A.INGRP,
+			(SELECT SEC_NAME FROM EPM.TB_SEC WHERE PLANT_CODE = A.IWERK AND SEC_CODE = A.INGRP AND SEC_IND = '1' AND PLANT_IND = '0') INGRP_NAME,
+			A.WKCNT,
+			(SELECT SEC_NAME FROM EPM.TB_SEC WHERE PLANT_CODE = A.IWERK AND SEC_CODE = A.WKCNT AND SEC_IND = '2' AND PLANT_IND = '1') WKCNT_NAME,
+			A.CG_CD,
+			A.CG_SCHD,
+			A.CG_STS,
+			A.CGNAME,
+			A.CG_IND,
+			A.IUSER,
+			(SELECT EMP_NAME FROM EPM.TB_EMP WHERE EMP_NO = A.IUSER) IUSER_NAME,
+			TO_CHAR(A.IDATE, 'YYYY-MM-DD') IDATE,
+			A.CGTYPE
+		FROM TB_CSGRP A 
+		<isNotEmpty property="confirm">	
+			,(SELECT CG_SEQ
+				FROM TB_CSGRP
+				JOIN TB_MEAS USING(CG_SEQ) 
+				WHERE 1=1
+				AND MEAS_STS IS  NULL
+				GROUP BY CG_SEQ) B
+		</isNotEmpty>
+		WHERE 1 = 1 
+		<isNotEmpty property="confirm">	
+			AND A.CG_SEQ = B.CG_SEQ
+		</isNotEmpty>
+		<isNotEmpty property="IWERK">
+			AND	A.IWERK = #IWERK#
+		</isNotEmpty>
+		<isNotEmpty property="IUSER">
+			AND	A.IUSER = #IUSER#
+		</isNotEmpty>
+		ORDER BY CGNAME
+		
+	</select>	
+	
+	<select id="getGroupItems" resultClass="java.util.HashMap">		
+		SELECT    
+		    V1.ITEM_MIN,
+		    V1.ITEM_MAX,
+		    V1.UNIT_SEQ,
+		    V1.PDM_TERM,
+		    TP.TPLNR,
+		    TP.POINT_NAME,
+		    TI.ITEM_NAME
+		  FROM 
+		    (SELECT 
+		      T1.POINT_SEQ,
+		      T1.ITEM_SEQ,
+		      T2.ITEM_MIN,
+					T2.ITEM_MAX,
+					T2.UNIT_SEQ,
+					T2.PDM_TERM
+		    FROM TB_CGITEM T1, TB_EPI T2 
+		    WHERE T2.POINT_SEQ = T1.POINT_SEQ
+		    AND T2.ITEM_SEQ = T1.ITEM_SEQ
+		    AND T1.CG_SEQ = #CG_SEQ#) V1, TB_POINT TP, TB_ITEM TI
+		  WHERE V1.POINT_SEQ = TP.POINT_SEQ
+		  AND V1.ITEM_SEQ = TI.ITEM_SEQ
+	</select>	
+		
+	<insert id="insertCsgrp" parameterClass="map" >
+		<selectKey keyProperty="cg_seq" resultClass="long">
+			SELECT TB_CSGRP_SEQ.nextVal from dual
+		</selectKey>
+		INSERT INTO TB_CSGRP (
+			CG_SEQ,
+			IWERK,
+			SWERK,
+			WKCNT,
+			CG_CD,
+			CG_STS,
+			BEBER,
+			INGRP,
+			CG_SCHD,
+			CGNAME,
+			CG_IND,
+			IUSER,
+			IDATE,
+			CGTYPE
+		) VALUES (
+			#cg_seq#,
+			#IWERK#,
+			#SWERK#,
+			#WKCNT#,
+			#CG_CD#,
+			'Y',
+			#BEBER#,
+			#INGRP#,
+			#CG_SCHD#,
+			#CGNAME#,
+			#CG_IND#,
+			#IUSER#,
+			SYSDATE,
+			#CGTYPE#
+		)
+			
+	</insert>
+		
+	<insert id="insertCgitem" parameterClass="map" >
+		INSERT INTO TB_CGITEM (			
+			CG_SEQ,
+			POINT_SEQ,
+			ITEM_SEQ,
+			CI_STS,			
+			IUSER						
+		) VALUES (
+			#CG_SEQ#,
+			#POINT_SEQ#,
+			#ITEM_SEQ#,
+			'Y',			
+			'SYSTEM'		
+		)
+			
+	</insert>
+	
+	<delete id="deleteCgitem" parameterClass="map">
+		DELETE FROM TB_CGITEM
+		WHERE CG_SEQ = #CG_SEQ#
+		<isNotEmpty property="POINT_SEQ">	
+			AND POINT_SEQ = #POINT_SEQ#
+		</isNotEmpty>
+		<isNotEmpty property="ITEM_SEQ">	
+			AND ITEM_SEQ = #ITEM_SEQ#
+		</isNotEmpty>				
+	</delete>
+	
+	<delete id="deleteCsgrp" parameterClass="map">
+		DELETE FROM TB_CSGRP
+		WHERE CG_SEQ = #CG_SEQ#						
+	</delete>
+	
+</sqlMap>
+

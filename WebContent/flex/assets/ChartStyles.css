@@ -1,0 +1,69 @@
+    .Application
+    {
+        backgroundGradientColors: #FFFFFF, #CCCCCC;
+    }
+    
+    AreaChart
+    {
+        gutterLeft: 0;
+        gutterRight: 0;
+        gutterTop: 0;
+        gutterBottom: 0;
+    }
+
+    .noAxisStyle
+    {
+        showLine: false;
+        showLabels: false;
+        tickPlacement: none;
+    }
+    
+    .mainChartStyle
+    {
+        gutterBottom: 18;
+        gutterLeft: 0;
+        gutterRight: 0;
+    }
+    
+    .canvasContainerStyles
+    {
+        borderThickness: 1;
+        borderColor: #333333;
+        borderStyle: solid;
+        backgroundColor: #FFFFFF;
+        backgroundAlpha: 1;           
+    }
+    
+    GridLines
+    {
+        horizontalChangeCount: 1; 
+        verticalChangeCount: 2;
+        direction: both;
+    }
+
+    
+/* Step 3 - Select Date Ranges */
+    
+    HDividedBox
+    {
+        borderThickness: 1;
+        borderColor: #CCCCCC;
+        borderStyle: solid;
+    }
+
+    LinkButton
+    {
+        paddingLeft: 0;
+        paddingRight: 0;
+        paddingTop: 0;
+        paddingBottom: 0;    
+    }
+
+
+/* Step 5 */
+    Button
+    {
+        fillAlphas: 1,1;
+        cornerRadius: 2;
+    }
+    

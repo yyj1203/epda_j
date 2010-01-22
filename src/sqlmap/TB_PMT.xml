@@ -1,0 +1,40 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="pmt">	
+		
+	<select id="getPmtList" resultClass="java.util.HashMap">
+		SELECT PDM_PMT_CODE, PDM_PMT_DETAIL
+		FROM TB_PMT		
+	</select>
+		
+	<insert id="insertPmt" parameterClass="map" >
+	  	INSERT INTO TB_PMT (		
+			PDM_PMT_CODE,			
+			PDM_PMT_DETAIL			
+		) VALUES (
+			#PDM_PMT_CODE#,			
+			#PDM_PMT_DETAIL#
+		)
+	</insert>
+	
+	<update id="mergePmt" parameterClass="map">
+		MERGE INTO TB_PMT
+		USING DUAL
+		ON (PDM_PMT_CODE = #PDM_PMT_CODE#)
+		WHEN MATCHED THEN
+			UPDATE SET 
+				PDM_PMT_DETAIL = #PDM_PMT_DETAIL#				
+		WHEN NOT MATCHED THEN
+			INSERT (		
+				PDM_PMT_CODE,			
+				PDM_PMT_DETAIL			
+			) VALUES (
+				#PDM_PMT_CODE#,			
+				#PDM_PMT_DETAIL#
+			)
+	</update>	
+
+
+
+</sqlMap>

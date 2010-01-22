@@ -1,0 +1,34 @@
+<portfolio>
+
+	<stock>
+		<symbol>GOOG</symbol>
+		<company>Google Inc</company>
+		<last>417.93</last>
+	</stock>
+
+	<stock>
+		<symbol>ADBE</symbol>
+		<company>Adobe Systems Incorporated</company>
+		<last>39.20</last>
+	</stock>
+
+	<stock>
+		<symbol>YHOO</symbol>
+		<company>Yahoo Inc.</company>
+		<last>32.78</last>
+	</stock>
+
+	<stock>
+		<symbol>IBM</symbol>
+		<company>International Business Machines Corp.</company>
+		<last>82.34</last>
+	</stock>
+
+	<stock>
+		<symbol>SAP</symbol>
+		<company>SAP AG</company>
+		<last>54.63</last>
+	</stock>
+	
+
+</portfolio>

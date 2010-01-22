@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    
+<struts>
+    <package name="nseye" namespace="/nseye" extends="struts-default">
+    	<action name="listNseye" method="listNseye" class="com.kps.kcm.action.NseyeAction">
+    		<result name="success" type="dispatcher">/nseye/ListNseye.jsp</result>
+    	</action>
+    </package>
+</struts> 

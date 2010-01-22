@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    
+<struts>
+    <package name="nscareer" namespace="/nscareer" extends="struts-default">
+    	<!-- 개인별경력기록을 얻어옵니다 -->
+    	<action name="listNscareer" method="listNscareer" class="com.kps.kcm.action.NscareerAction">
+    		<result name="success" type="dispatcher">/nscareer/ListNscareer.jsp</result>
+    	</action>
+    	
+    	<!-- 개인별경력기록등록 폼 페이지로 갑니다 ... -->
+   		<action name="requestNscareerForm" method="insertNscareer" class="com.kps.kcm.action.NscareerAction">
+    		<result name="success" type="dispatcher">/nscareer/RequestNscareerForm.jsp</result>
+    	</action>          	
+    </package>
+        
+</struts> 

@@ -1,0 +1,534 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="point">
+	
+	<typeAlias alias="CodeMap" type="com.kps.common.dto.CodeMap"/>
+	
+	<select id="getINGRPCodeList" resultClass="CodeMap" >
+		SELECT			
+			PDM_INGRP data,			
+			(SELECT SEC_NAME FROM EPM.TB_SEC WHERE PLANT_CODE = IWERK AND SEC_CODE = PDM_INGRP AND SEC_IND = '1' AND PLANT_IND = '0') label
+		FROM
+			(SELECT T1.IWERK, T2.PDM_INGRP
+				FROM TB_POINT T1, TB_EPI T2
+				WHERE T1.POINT_SEQ = T2.POINT_SEQ
+				AND T1.IWERK = #IWERK#
+				AND T2.PDM_INGRP IS NOT NULL
+				GROUP BY T1.IWERK, T2.PDM_INGRP)
+	</select>
+	
+	<select id="getGWERKCodeList" resultClass="CodeMap" >
+		SELECT			
+			PDM_GWERK data,			
+			(SELECT SEC_NAME FROM EPM.TB_SEC WHERE PLANT_CODE = #IWERK# AND SEC_CODE = PDM_GWERK AND SEC_IND = '2' AND PLANT_IND = '1') label
+		FROM
+			(SELECT T2.PDM_GWERK
+				FROM TB_POINT T1, TB_EPI T2
+				WHERE T1.POINT_SEQ = T2.POINT_SEQ
+				AND T1.IWERK = #IWERK#
+				AND T2.PDM_INGRP = #PDM_INGRP#
+				GROUP BY T2.PDM_GWERK)
+	</select>
+
+	<select id="getCheckPositions" resultClass="java.util.HashMap">
+		SELECT T1.TPLNR,
+			T1.TPLNR || ' (' ||(SELECT SYSTEM_NAME FROM TB_SYSTEM WHERE SYSTEM_CODE = TPLNR) || ')' TPLNR_NAME, 
+			T1.POINT_NAME, 
+			T1.POINT_SEQ, 
+			T2.ITEM_SEQ, 
+			NVL(T2.ITEM_MAX,0) ITEM_MAX, 
+      		NVL(T2.ITEM_MIN,0) ITEM_MIN,
+      		T3.ITEM_NAME,
+			(SELECT UNIT_NAME FROM TB_UNIT WHERE UNIT_SEQ = T3.UNIT_SEQ) UNIT_NAME,
+			T2.PDM_TERM
+			FROM TB_POINT T1, TB_EPI T2, TB_ITEM T3
+		  	WHERE T1.POINT_SEQ = T2.POINT_SEQ
+		  	AND T2.ITEM_SEQ = T3.ITEM_SEQ
+		  	AND T1.IWERK = #IWERK#
+		  	<isEqual property="TREELEVEL" compareValue="beber">				
+		  		AND T1.BEBER = #BEBER#
+			</isEqual>
+		  	<isEqual property="TREELEVEL" compareValue="system">
+		  		AND T1.BEBER = #BEBER#
+				AND T1.SYSTEM_CODE IN (	SELECT SYSTEM_CODE FROM TB_SYSTEM WHERE SYSTEM_CODE = #SYSTEM_CODE#
+                               			UNION ALL
+                               			SELECT SYSTEM_CODE FROM TB_SYSTEM WHERE PARENT_CODE = #SYSTEM_CODE#) 
+			</isEqual>
+			<isEqual property="TREELEVEL" compareValue="tplnr">
+				<!-- For System -->
+				<isNotEmpty property="BEBER">
+					AND T1.BEBER = #BEBER#
+				</isNotEmpty>
+				<!-- For Organization -->
+				<isNotEmpty property="PDM_INGRP">
+					AND T2.PDM_INGRP = #PDM_INGRP#
+				</isNotEmpty>
+				<isNotEmpty property="PDM_GWERK">
+					AND T2.PDM_GWERK = #PDM_GWERK#
+				</isNotEmpty>	
+				<!-- For PMT -->
+				<isNotEmpty property="PDM_PMT_CODE">
+					AND T2.PDM_PMT_CODE = #PDM_PMT_CODE#
+				</isNotEmpty>			
+				AND T1.TPLNR = #TPLNR#
+			</isEqual>
+			<!-- For Organization -->
+			<isEqual property="TREELEVEL" compareValue="pdm_ingrp">
+				AND T2.PDM_INGRP = #PDM_INGRP#				
+			</isEqual>
+			<isEqual property="TREELEVEL" compareValue="pdm_gwerk">
+				AND T2.PDM_INGRP = #PDM_INGRP#
+				AND T2.PDM_GWERK = #PDM_GWERK#				
+			</isEqual>			
+			<!-- For PMT -->
+			<isEqual property="TREELEVEL" compareValue="pdm_pmt">
+				AND T2.PDM_PMT_CODE = #PDM_PMT_CODE#				
+			</isEqual>
+			<isEqual property="TREELEVEL" compareValue="pmt_beber">
+				AND T2.PDM_PMT_CODE = #PDM_PMT_CODE#
+				AND T1.BEBER = #BEBER#				
+			</isEqual>		  	
+	</select>
+	
+	<select id="getSearchResult" resultClass="java.util.HashMap">		
+		SELECT TPLNR
+		FROM
+			(SELECT TPLNR
+				FROM
+				(SELECT TPLNR, POINT_SEQ, ITEM_SEQ 
+					FROM TB_EPI
+					JOIN TB_POINT USING(POINT_SEQ)
+					JOIN TB_ITEM USING(ITEM_SEQ)
+					<isNotEmpty property="CG_SEQ">
+						JOIN TB_CGITEM USING(POINT_SEQ, ITEM_SEQ)					    
+					</isNotEmpty>
+					<isNotEmpty property="MEAS_DTIME1">
+						JOIN TB_MEAS USING(POINT_SEQ, ITEM_SEQ)						
+					</isNotEmpty>
+					WHERE IWERK = #IWERK#
+					AND TB_EPI.PDM_INGRP = #PDM_INGRP#
+					<isNotEmpty property="CG_SEQ">						
+					    AND CG_SEQ = #CG_SEQ#
+					</isNotEmpty>
+					<isNotEmpty property="MEAS_DTIME1">						
+						AND MEAS_DTIME BETWEEN TO_DATE(#MEAS_DTIME1# || '0000' , 'YYYYMMDDHH24MI') 
+					    					AND TO_DATE(#MEAS_DTIME2# || '2359' , 'YYYYMMDDHH24MI')
+					</isNotEmpty>
+					<isNotEmpty property="BEBER">
+						AND BEBER = #BEBER#
+					</isNotEmpty>
+					<isNotEmpty property="TPLNR">
+						AND TPLNR LIKE #TPLNR# || '%'
+					</isNotEmpty>
+					<isNotEmpty property="EQART">
+						AND EQART = #EQART#
+					</isNotEmpty>
+					<isNotEmpty property="PDM_PMT_CODE">
+						AND PDM_PMT_CODE = #PDM_PMT_CODE#
+					</isNotEmpty>
+					<isNotEmpty property="ITEM_SEQ">
+						AND ITEM_SEQ = #ITEM_SEQ#
+					</isNotEmpty>			
+					<isNotEmpty property="ITEM_KIND">
+						AND ITEM_KIND = #ITEM_KIND# 
+					</isNotEmpty>
+					<isNotEmpty property="OIL_CD">
+						AND OIL_CD = #OIL_CD#
+					</isNotEmpty>
+				) 
+			GROUP BY TPLNR)	
+				
+				
+	</select>
+	
+
+	<select id="getSystems" resultClass="com.kps.epda.vo.Classification">
+		SELECT system_code, 
+			SYSTEM_NAME NAME, 
+			IWERK, 
+			BEBER,
+			'' TPLNR,
+			'TRUE' ISBRANCH,
+			1 HASCHILDREN,
+			'system' treelevel
+			FROM TB_SYSTEM
+			WHERE IWERK = #IWERK#
+			AND BEBER = #BEBER#
+			<isEmpty property="PARENT_CODE">
+				AND PARENT_CODE IS NULL
+			</isEmpty>
+			<isNotEmpty property="PARENT_CODE">
+				AND PARENT_CODE = #PARENT_CODE#
+			</isNotEmpty>	
+			AND ISTPLNR = 'N'		
+		UNION ALL					
+		SELECT
+			SYSTEM_CODE, 
+			TPLNR || ' (' ||(SELECT SYSTEM_NAME FROM TB_SYSTEM WHERE SYSTEM_CODE = TPLNR) || ')' NAME,
+			IWERK, 
+			BEBER, 			 
+			TPLNR,			
+			'FALSE' ISBRANCH, 
+			0 HASCHILDREN,
+			'tplnr' treelevel
+		FROM
+		(SELECT IWERK, BEBER, SYSTEM_CODE, TPLNR 
+		FROM TB_POINT
+		WHERE IWERK = #IWERK#
+		AND BEBER = #BEBER#
+		AND SYSTEM_CODE = #PARENT_CODE#
+		GROUP BY IWERK, BEBER, SYSTEM_CODE, TPLNR)			
+	</select>	
+
+	<select id="getBeberList" resultClass="com.kps.epda.vo.Classification">
+		SELECT B.BEBER beber,
+			A.SEC_NAME name,
+			B.IWERK iwerk,
+			1 haschildren,
+			'beber' treelevel				
+			FROM EPM.TB_SEC A,
+			  (SELECT IWERK, BEBER   
+			  FROM TB_POINT
+			  WHERE IWERK = #IWERK#
+			  GROUP BY IWERK, BEBER) B
+			WHERE A.PLANT_CODE = B.IWERK
+			AND A.SEC_CODE = B.BEBER
+			AND A.SEC_IND = '0'
+			ORDER BY B.BEBER
+	</select>
+		
+	<select id="getOrganization" resultClass="com.kps.epda.vo.Classification">
+		<isEmpty property="PDM_GWERK">
+			SELECT 
+				IWERK iwerk,
+				PDM_INGRP pdm_ingrp,
+				PDM_GWERK pdm_gwerk,
+				1 hasChildren,
+				'pdm_gwerk' treelevel,
+				(SELECT SEC_NAME FROM EPM.TB_SEC WHERE PLANT_CODE = IWERK AND SEC_CODE = PDM_GWERK AND SEC_IND = '2' AND PLANT_IND = '1') NAME
+			FROM			
+				(SELECT 
+					T1.IWERK, T2.PDM_INGRP, T2.PDM_GWERK
+					FROM TB_POINT T1, TB_EPI T2
+					WHERE T2.POINT_SEQ = T1.POINT_SEQ
+					AND T1.IWERK = #IWERK#
+					AND T2.PDM_INGRP = #PDM_INGRP#
+					AND T2.PDM_GWERK IS NOT NULL
+					GROUP BY T1.IWERK, T2.PDM_INGRP, T2.PDM_GWERK)			
+		</isEmpty>
+		<isNotEmpty property="PDM_GWERK">
+			SELECT
+				IWERK iwerk,
+				TPLNR tplnr,
+				'tplnr' treelevel,
+				'' pdm_ingrp,
+				'' pdm_gwerk,
+				0 hasChildren,
+				TPLNR NAME
+			FROM	
+				(SELECT T1.IWERK, T1.TPLNR, T2.PDM_INGRP, T2.PDM_GWERK  
+					FROM TB_POINT T1, TB_EPI T2
+					WHERE T2.POINT_SEQ = T1.POINT_SEQ
+					AND T1.IWERK = #IWERK#
+					AND T2.PDM_INGRP = #PDM_INGRP#
+					AND T2.PDM_GWERK = #PDM_GWERK#
+					GROUP BY T1.IWERK, T1.TPLNR, T2.PDM_INGRP, T2.PDM_GWERK)
+			
+		</isNotEmpty>					
+	</select>
+	
+	<select id="getPmtTree" resultClass="com.kps.epda.vo.Classification">
+		<isEmpty property="BEBER">
+			SELECT 
+				IWERK iwerk,
+				PDM_PMT_CODE pdm_pmt_code,
+				BEBER beber,
+				1 hasChildren,
+				'pmt_beber' treelevel,
+				(SELECT SEC_NAME FROM EPM.TB_SEC WHERE PLANT_CODE = IWERK AND SEC_CODE = BEBER AND SEC_IND = '0' AND PLANT_IND = '1') NAME
+			FROM			
+				(SELECT T1.IWERK, T2.PDM_PMT_CODE, T1.BEBER
+					FROM TB_POINT T1, TB_EPI T2
+					WHERE T2.POINT_SEQ = T1.POINT_SEQ
+					AND T1.IWERK = #IWERK#
+					AND T2.PDM_PMT_CODE = #PDM_PMT_CODE#
+					AND T2.PDM_PMT_CODE IS NOT NULL
+					GROUP BY T1.IWERK, T2.PDM_PMT_CODE, T1.BEBER)			
+		</isEmpty>
+		<isNotEmpty property="BEBER">
+			SELECT
+				A.IWERK iwerk,
+				A.PDM_PMT_CODE pdm_pmt_code,
+				A.BEBER beber,
+				A.TPLNR tplnr,
+				'tplnr' treelevel,
+				'' pdm_ingrp,				 
+				'' pdm_gwerk,
+				0 hasChildren,
+				A.TPLNR NAME
+			FROM	
+				(SELECT T1.IWERK, T2.PDM_PMT_CODE, T1.BEBER, T1.TPLNR
+					FROM TB_POINT T1, TB_EPI T2
+					WHERE T2.POINT_SEQ = T1.POINT_SEQ
+					AND T1.IWERK = #IWERK#
+					AND T2.PDM_PMT_CODE = #PDM_PMT_CODE#
+					AND T1.BEBER = #BEBER#
+					AND T2.PDM_PMT_CODE IS NOT NULL
+					GROUP BY T1.IWERK, T2.PDM_PMT_CODE, T1.BEBER, T1.TPLNR) A			
+		</isNotEmpty>					
+	</select>
+	
+	<select id="getOrgList" resultClass="com.kps.epda.vo.Classification">
+		SELECT 
+			IWERK iwerk, 
+			PDM_INGRP pdm_ingrp,
+			1 haschildren,
+			'pdm_ingrp' treelevel,
+			(SELECT SEC_NAME FROM EPM.TB_SEC WHERE PLANT_CODE = IWERK AND SEC_CODE = PDM_INGRP AND SEC_IND = '1' AND PLANT_IND = '0') NAME
+		FROM
+			(SELECT T1.IWERK, T2.PDM_INGRP
+				FROM TB_POINT T1, TB_EPI T2
+				WHERE T1.POINT_SEQ = T2.POINT_SEQ
+				AND T1.IWERK = #IWERK#
+				AND T2.PDM_INGRP IS NOT NULL
+				GROUP BY T1.IWERK, T2.PDM_INGRP)
+	</select>
+	
+	<select id="getPmtsForPlant" resultClass="com.kps.epda.vo.Classification">
+		SELECT 
+			A.IWERK,
+			A.PDM_PMT_CODE,
+			1 haschildren,
+			'pdm_pmt' treelevel,
+			(SELECT PDM_PMT_DETAIL FROM TB_PMT WHERE PDM_PMT_CODE = A.PDM_PMT_CODE) NAME
+		FROM
+			(SELECT T1.IWERK, T2.PDM_PMT_CODE 
+				FROM TB_POINT T1, TB_EPI T2
+				WHERE T2.POINT_SEQ = T1.POINT_SEQ
+				AND T1.IWERK = #IWERK#
+				AND T2.PDM_PMT_CODE IS NOT NULL
+				GROUP BY T1.IWERK, T2.PDM_PMT_CODE) A
+	</select>
+
+	
+	<select id="getPointSeq" resultClass="java.util.HashMap">
+		SELECT POINT_SEQ
+		FROM TB_POINT
+		WHERE TPLNR = #TPLNR#
+		AND POINT_NAME = #POINT_NAME#
+	</select>
+	
+	<select id="getSystemCount" resultClass="int">
+		SELECT COUNT(*)
+		FROM TB_SYSTEM
+		WHERE SYSTEM_CODE = #SYSTEM_CODE#
+	</select>
+	
+	<select id="getPointCount" resultClass="int">
+		SELECT COUNT(*)
+		FROM TB_POINT
+		WHERE TPLNR = #TPLNR#
+		<isNotEmpty property="POINT_NAME">
+			AND POINT_NAME = #POINT_NAME#
+		</isNotEmpty>
+	</select>
+	
+	<select id="getEpiCount" resultClass="int">
+		SELECT COUNT(*)
+		FROM TB_EPI
+		WHERE POINT_SEQ = #POINT_SEQ#
+		AND ITEM_SEQ = #ITEM_SEQ#
+	</select>
+	
+	<select id="getPmtList" resultClass="java.util.HashMap">
+		SELECT PDM_PMT_CODE, PDM_PMT_DETAIL
+		FROM TB_PMT		
+	</select>
+	
+	<insert id="insertPoint" parameterClass="map" >
+		<selectKey keyProperty="point_seq" resultClass="int">
+			SELECT TB_POINT_SEQ.nextVal from dual
+		</selectKey>
+	  	INSERT INTO TB_POINT (
+			POINT_SEQ,
+			IWERK,
+			SWERK,
+			BEBER,
+			TPLNR,
+			POINT_CD,
+			POINT_STS,
+			WKCNT,
+			POINT_NAME,
+			POINT_IND,
+			POINT_USER,
+			SYSTEM_CODE						
+		) VALUES (
+			#point_seq#,
+			#IWERK#,
+			#SWERK#,
+			#BEBER#,
+			#TPLNR#,
+			'point_' || #point_seq#,
+			#POINT_STS#,
+			#WKCNT#,
+			#POINT_NAME#,
+			#POINT_IND#,
+			#POINT_USER#,
+			#SYSTEM_CODE#			
+		)	
+	</insert>	
+	
+ 	
+	<insert id="insertEpi" parameterClass="map" >
+	  	INSERT INTO TB_EPI (
+			POINT_SEQ,
+			ITEM_SEQ,
+			OIL_CD,
+			ITEM_SCHD,
+			ITEM_OFST,
+			ITEM_LH,
+			ITEM_TARG,
+			ITEM_MIN,
+			ITEM_MAX,
+			ITEM_KIND_EPI,
+			MPTYP,
+			PDM_INSP_SEQ,
+			CLASS,
+			DECIM,
+			CODGR,
+			PDM_WEEKDAY,
+			PDM_PMT_CODE,
+			PDM_WATCH,
+			PDM_INGRP,
+			PDM_GWERK,
+			PDM_CATEGORY,
+			EQART,
+			PDM_POINT_DETAIL,
+			PDM_TERM,
+			PDM_TERM_CODE,
+			PDM_TERM_MON,
+			PDM_TERM_WEEK,
+			PDM_TERM_START,
+			PDM_TERM_USE_START,
+			PDM_TERM_USE_END
+		) VALUES (
+			#POINT_SEQ#,
+			#ITEM_SEQ#,
+			#OIL_CD#,
+			#ITEM_SCHD#,
+			#ITEM_OFST#,
+			#ITEM_LH#,
+			#ITEM_TARG#,
+			#ITEM_MIN#,
+			#ITEM_MAX#,
+			#ITEM_KIND_EPI#,
+			#MPTYP#,
+			#PDM_INSP_SEQ#,
+			#CLASS#,
+			#DECIM#,
+			#CODGR#,
+			#PDM_WEEKDAY#,
+			#PDM_PMT_CODE#,
+			#PDM_WATCH#,
+			#PDM_INGRP#,
+			#PDM_GWERK#,
+			#PDM_CATEGORY#,
+			#EQART#,
+			#PDM_POINT_DETAIL#,
+			#PDM_TERM#,
+			#PDM_TERM_CODE#,
+			#PDM_TERM_MON#,
+			#PDM_TERM_WEEK#,
+			#PDM_TERM_START#,
+			#PDM_TERM_USE_START#,
+			#PDM_TERM_USE_END#
+		)	
+	</insert>
+	
+	<update id="updateMinMax" parameterClass="map">
+		UPDATE TB_EPI 
+			SET 	
+			<isEqual property="CHANGEDCOLUMN" compareValue="MIN">
+				ITEM_MIN=#NEWVAL#
+			</isEqual>			                                                           
+			<isEqual property="CHANGEDCOLUMN" compareValue="MAX">
+				ITEM_MAX=#NEWVAL#
+			</isEqual>					      
+			WHERE POINT_SEQ = #POINT_SEQ#
+			AND ITEM_SEQ = #ITEM_SEQ#
+	</update>
+	
+	<insert id="insertPmt" parameterClass="map" >
+	  	INSERT INTO TB_PMT (		
+			PDM_PMT_CODE,			
+			PDM_PMT_DETAIL			
+		) VALUES (
+			#PDM_PMT_CODE#,			
+			#PDM_PMT_DETAIL#
+		)
+	</insert>
+	
+	<update id="mergePmt" parameterClass="map">
+		MERGE INTO TB_PMT
+		USING DUAL
+		ON (PDM_PMT_CODE = #PDM_PMT_CODE#)
+		WHEN MATCHED THEN
+			UPDATE SET 
+				PDM_PMT_DETAIL = #PDM_PMT_DETAIL#				
+		WHEN NOT MATCHED THEN
+			INSERT (		
+				PDM_PMT_CODE,			
+				PDM_PMT_DETAIL			
+			) VALUES (
+				#PDM_PMT_CODE#,			
+				#PDM_PMT_DETAIL#
+			)
+	</update>	
+
+	<update id="mergeSystem" parameterClass="map">
+		MERGE INTO TB_SYSTEM
+		USING DUAL
+		ON (SYSTEM_CODE = #SYSTEM_CODE#)
+		WHEN MATCHED THEN
+			UPDATE SET 
+				SYSTEM_NAME = #SYSTEM_NAME#,
+				PARENT_CODE = #PARENT_CODE#,
+				IWERK = #IWERK#,
+				BEBER = #IWERK#				
+		WHEN NOT MATCHED THEN
+			INSERT (		
+				SYSTEM_CODE,
+				SYSTEM_NAME,
+				PARENT_CODE,
+				IWERK,
+				BEBER			
+			) VALUES (
+				#SYSTEM_CODE#,
+				#SYSTEM_NAME#,
+				#PARENT_CODE#,
+				#IWERK#,
+				#BEBER#
+			)
+	</update>
+	
+	<insert id="insertSystem" parameterClass="map" >
+		INSERT INTO TB_SYSTEM (
+			SYSTEM_CODE,
+			SYSTEM_NAME,
+			PARENT_CODE,
+			IWERK,
+			BEBER
+		) VALUES (
+			#SYSTEM_CODE#,
+			#SYSTEM_NAME#,
+			#PARENT_CODE#,
+			#IWERK#,
+			#BEBER#
+		)
+			
+	</insert>
+	
+
+
+</sqlMap>

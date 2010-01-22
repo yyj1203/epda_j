@@ -1,0 +1,77 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="item">
+	
+	<typeAlias alias="CodeMap" type="com.kps.common.dto.CodeMap"/>
+	
+
+	<select id="getUnitSeq" resultClass="java.util.HashMap">
+		SELECT UNIT_SEQ, UNIT_SPEC_NAME 
+		FROM TB_UNIT
+		WHERE UNIT_SPEC_CODE = #UNIT_SPEC_CODE#
+	</select>
+	
+	<select id="getItemCode" resultClass="java.util.HashMap">
+		SELECT CCOD_CD2
+		FROM EVIB.TB_CCOD
+		WHERE CCOD_CD1 = 'AB'
+		AND CCOD_DES LIKE #CCOD_DES# || '%'
+	</select>
+	
+	<select id="getItemCount" resultClass="int">
+		SELECT COUNT(*)
+		FROM TB_ITEM
+		WHERE PDM_PMT_CODE = #PDM_PMT_CODE#
+		AND PDM_INSP_SEQ = #PDM_INSP_SEQ#
+	</select>
+	
+	<select id="getItemSeq" resultClass="java.util.HashMap">
+		SELECT A.ITEM_SEQ, A.ITEM_NAME, A.ITEM_KIND, A.PDM_INSP_SEQ, A.UNIT_SEQ,
+			(SELECT CCOD_DES FROM EVIB.TB_CCOD WHERE CCOD_CD1 = 'AB'	AND CCOD_CD2 = A.ITEM_KIND) ITEM_KIND_NAME 
+		FROM TB_ITEM A
+		WHERE A.PDM_PMT_CODE = #PDM_PMT_CODE#
+		<isNotEmpty property="PDM_INSP_SEQ">
+			AND A.PDM_INSP_SEQ = #PDM_INSP_SEQ#			
+		</isNotEmpty>
+		ORDER BY A.PDM_INSP_SEQ
+		
+	</select>
+	
+
+	<insert id="insertItem" parameterClass="map" >
+		<selectKey keyProperty="item_seq" resultClass="int">
+			SELECT TB_ITEM_SEQ.nextVal from dual
+		</selectKey>
+	  	INSERT INTO TB_ITEM (
+			ITEM_SEQ,
+			ITEM_CD,
+			ITEM_STS,
+			ITEM_MERG,
+			ITEM_NAME,
+			UNIT_SEQ,
+			ITEM_KIND,
+			ITEM_IND,
+			ITEM_USER,
+			PDM_PMT_CODE,
+			PDM_INSP_SEQ,
+			PDM_PMT_DETAIL		
+		) VALUES (
+			#item_seq#,
+			'item_' || #item_seq#,
+			#ITEM_STS#,
+			#ITEM_MERG#,
+			#ITEM_NAME#,
+			#UNIT_SEQ#,
+			#ITEM_KIND#,
+			#ITEM_IND#,
+			#ITEM_USER#,
+			#PDM_PMT_CODE#,
+			#PDM_INSP_SEQ#,
+			#PDM_PMT_DETAIL#		
+		)	
+	</insert>
+ 	
+
+
+</sqlMap>
