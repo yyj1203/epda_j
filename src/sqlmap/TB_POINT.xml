@@ -518,13 +518,15 @@
 			SYSTEM_NAME,
 			PARENT_CODE,
 			IWERK,
-			BEBER
+			BEBER,
+            ISTPLNR
 		) VALUES (
 			#SYSTEM_CODE#,
 			#SYSTEM_NAME#,
 			#PARENT_CODE#,
 			#IWERK#,
-			#BEBER#
+			#BEBER#,
+            #ISTPLNR#
 		)
 			
 	</insert>
